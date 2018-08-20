@@ -4,30 +4,38 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using Serilog;
 using Serilog.Events;
+using Serilog.Extensions.Logging;
+using Serilog.Sinks.File;
+using NReco.Logging.File;
 
 namespace MultipleLogger {
     class Program {
         static void Main(string[] args) {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
-
             var collection = new ServiceCollection();
-            collection.AddLogging(builder => {
-                builder.ClearProviders();
-                builder.AddConsole();
-                builder.AddSerilog();
-            });
-            collection.AddSingleton<MyService>();
+            Configure(collection);
 
             var serviceProvider = collection.BuildServiceProvider();
             var service = serviceProvider.GetService(typeof(MyService)) as MyService;
             service.FuncA();
 
-            Console.WriteLine("Hello, world!");
+            Console.ReadLine();
+        }
+
+        private static void Configure(IServiceCollection collection) {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.File("Seri.log")
+                .CreateLogger();
+
+            collection.AddLogging(builder => {
+                builder.ClearProviders();
+                builder.AddConsole();
+                builder.AddSerilog();
+                builder.AddFile("NReco.log");
+            });
+            collection.AddSingleton<MyService>();
         }
     }
 
@@ -39,10 +47,10 @@ namespace MultipleLogger {
         }
 
         public void FuncA() {
-            logger.LogInformation("Hello, world");
-            logger.LogError("Hello, error");
-
+            logger.LogInformation("Log A");
+            logger.LogInformation("Log B");
+            logger.LogInformation("Log C");
+            logger.LogError("Error D");
         }
-
     }
 }
