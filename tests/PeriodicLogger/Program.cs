@@ -10,31 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 
+
 namespace PeriodicLogger {
-
-    static class Extensions {
-        public static LoggerConfiguration Email(this LoggerSinkConfiguration loggerConfiguration) {
-            return loggerConfiguration.Sink(new EmailSink(100, TimeSpan.FromSeconds(10)));
-        }
-    }
-
-    public class EmailSink : PeriodicBatchingSink {
-        public EmailSink(int batchSizeLimit, TimeSpan period) : base(batchSizeLimit, period) {
-
-        }
-
-        protected override async Task EmitBatchAsync(IEnumerable<LogEvent> events) {
-            await Task.FromResult(SendEmail(events));
-        }
-
-        int SendEmail(IEnumerable<LogEvent> events) {
-            foreach (var item in events) {
-                Thread.Sleep(1000);
-                Console.WriteLine($"{item.Timestamp} [{item.Level}] : {item.RenderMessage()}");
-            }
-            return 0;
-        }
-    }
 
     class Program {
         static void Main(string[] args) {
@@ -53,19 +30,6 @@ namespace PeriodicLogger {
 
             Console.WriteLine("Wait for exit");
             Console.ReadLine();
-        }
-    }
-
-    class MyService {
-        private ILogger<MyService> logger;
-        public MyService(ILogger<MyService> logger) {
-            this.logger = logger;
-        }
-
-        public void FunA() {
-            logger.LogInformation("Start A1");
-            logger.LogInformation("Start A2");
-            logger.LogInformation("Start A3");
         }
     }
 }
