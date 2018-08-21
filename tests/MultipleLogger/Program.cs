@@ -49,7 +49,7 @@ namespace MultipleLogger {
         }
 
         public void FuncA() {
-            for (var i = 0; i < 20; i++) {
+            for (var i = 0; i < 10; i++) {
                 logger.LogInformation("Log A");
             }
         }

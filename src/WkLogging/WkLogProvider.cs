@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 namespace WkLogging {
 
     public class WkLogProvider : ILoggerProvider {
-        private readonly IHttpClientFactory factory;
 
         public WkLogProvider(IOptions<WkLogOptions> options) {
         }
