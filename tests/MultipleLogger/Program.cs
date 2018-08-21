@@ -7,6 +7,7 @@ using Serilog.Events;
 using Serilog.Extensions.Logging;
 using Serilog.Sinks.File;
 using NReco.Logging.File;
+using WkLogging;
 
 namespace MultipleLogger {
     class Program {
@@ -31,9 +32,10 @@ namespace MultipleLogger {
 
             collection.AddLogging(builder => {
                 builder.ClearProviders();
-                builder.AddConsole();
-                builder.AddSerilog();
-                builder.AddFile("NReco.log");
+                builder.AddWk();
+                //builder.AddConsole();
+                //builder.AddSerilog();
+                //builder.AddFile("NReco.log");
             });
             collection.AddSingleton<MyService>();
         }
@@ -47,10 +49,9 @@ namespace MultipleLogger {
         }
 
         public void FuncA() {
-            logger.LogInformation("Log A");
-            logger.LogInformation("Log B");
-            logger.LogInformation("Log C");
-            logger.LogError("Error D");
+            for (var i = 0; i < 20; i++) {
+                logger.LogInformation("Log A");
+            }
         }
     }
 }
