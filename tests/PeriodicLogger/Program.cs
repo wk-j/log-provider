@@ -8,7 +8,6 @@ using Serilog.Sinks.PeriodicBatching;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using System.Threading;
 
 namespace PeriodicLogger {
@@ -49,7 +48,7 @@ namespace PeriodicLogger {
             service.AddSingleton<MyService>();
 
             var provider = service.BuildServiceProvider();
-            var my = provider.GetService(typeof(MyService)) as MyService;
+            var my = provider.GetService<MyService>();
             my.FunA();
 
             Console.WriteLine("Wait for exit");
